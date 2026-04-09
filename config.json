@@ -1,6 +1,5 @@
 {
     "testit":false,
     "cool":true,
-    "uri":"mongodb://localhost:27017",
-    "mongoOpenTime": 5
+    "uri":"mongodb://localhost:27017"
 }
