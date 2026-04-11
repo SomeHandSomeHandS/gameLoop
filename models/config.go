@@ -7,3 +7,12 @@ type Config struct {
 	ScreenHeight int    `json:"screenHeight"`
 	TileSize     int    `json:"tileSize"`
 }
+
+type LevelBook struct {
+	Levels []Level
+}
+
+type Level struct {
+	Name   string  `json:"name"`
+	Layers [][]int `json:"layers"`
+}
