@@ -1,18 +1,32 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
-	"fmt"
-	"image"
 
 	"io/ioutil"
 	"log"
+	"mongoConnector/game"
 	"mongoConnector/models"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	"github.com/hajimehoshi/ebiten/v2/examples/resources/images"
+)
+
+type Mode int
+
+const (
+	screenWidth  = 240
+	screenHeight = 240
+)
+
+const (
+	tileSize       = 16
+	ModeTitle Mode = iota
+	ModeGame
+	ModeGameOver
+)
+
+var (
+	tilesImage *ebiten.Image
 )
 
 func loadConfig(filename string) (config models.Config, err error) {
@@ -32,63 +46,6 @@ func loadConfig(filename string) (config models.Config, err error) {
 	}
 
 	return config, nil
-}
-
-const (
-	screenWidth  = 240
-	screenHeight = 240
-)
-
-const (
-	tileSize = 16
-)
-
-var (
-	tilesImage *ebiten.Image
-)
-
-type Game struct {
-	layers [][]int
-}
-
-func init() {
-	// Decode an image from the image file's byte slice.
-	img, _, err := image.Decode(bytes.NewReader(images.Tiles_png))
-	if err != nil {
-		log.Fatal(err)
-	}
-	tilesImage = ebiten.NewImageFromImage(img)
-}
-
-func (g *Game) Update() error {
-	return nil
-}
-
-func (g *Game) Draw(screen *ebiten.Image) {
-	w := tilesImage.Bounds().Dx()
-	tileXCount := w / tileSize
-
-	// Draw each tile with each DrawImage call.
-	// As the source images of all DrawImage calls are always same,
-	// this rendering is done very efficiently.
-	// For more detail, see https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.DrawImage
-	const xCount = screenWidth / tileSize
-	for _, l := range g.layers {
-		for i, t := range l {
-			op := &ebiten.DrawImageOptions{}
-			op.GeoM.Translate(float64((i%xCount)*tileSize), float64((i/xCount)*tileSize))
-
-			sx := (t % tileXCount) * tileSize
-			sy := (t / tileXCount) * tileSize
-			screen.DrawImage(tilesImage.SubImage(image.Rect(sx, sy, sx+tileSize, sy+tileSize)).(*ebiten.Image), op)
-		}
-	}
-
-	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.ActualTPS()))
-}
-
-func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
-	return screenWidth, screenHeight
 }
 
 func SetLevels() (levelBook *models.LevelBook) {
@@ -154,7 +111,7 @@ func GetLevel(level models.Level) [][]int {
 
 func main() {
 
-	g := &Game{}
+	g := &game.Game{}
 
 	// load config
 	_, err := loadConfig("config.json")
@@ -165,11 +122,12 @@ func main() {
 	// startup and get levels and set game
 	levelBook := SetLevels()
 
-	g.layers = levelBook.Levels[0].Layers
+	g.Layers = levelBook.Levels[0].Layers
 
 	ebiten.SetWindowSize(screenWidth*2, screenHeight*2)
-	ebiten.SetWindowTitle("Tiles (Ebitengine Demo)")
+	ebiten.SetWindowTitle("Cool game")
 	if err := ebiten.RunGame(g); err != nil {
 		log.Fatal(err)
 	}
+
 }
