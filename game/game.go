@@ -56,8 +56,13 @@ func (g *Game) Update() error {
 	case ModeGame:
 
 		if g.isKeyJustPressed() {
+			// update game state
 
 		}
+		// update game state
+
+		// if game over, switch to game over mode
+		// g.mode = ModeGameOver
 
 	case ModeGameOver:
 
