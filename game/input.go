@@ -5,6 +5,77 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
+type Dir int
+
+const (
+	DirUp Dir = iota
+	DirRight
+	DirDown
+	DirLeft
+)
+
+type mouseState int
+
+const (
+	mouseStateNone mouseState = iota
+	mouseStatePressing
+	mouseStateSettled
+)
+
+type touchState int
+
+const (
+	touchStateNone touchState = iota
+	touchStatePressing
+	touchStateSettled
+	touchStateInvalid
+)
+
+type Input struct {
+	mouseState    mouseState
+	mouseInitPosX int
+	mouseInitPosY int
+	mouseDir      Dir
+
+	touches       []ebiten.TouchID
+	touchState    touchState
+	touchID       ebiten.TouchID
+	touchInitPosX int
+	touchInitPosY int
+	touchLastPosX int
+	touchLastPosY int
+	touchDir      Dir
+}
+
+// NewInput generates a new Input object.
+func NewInput() *Input {
+	return &Input{}
+}
+
+// Dir returns a currently pressed direction.
+// Dir returns false if no direction key is pressed.
+func (i *Input) Dir() (Dir, bool) {
+	if inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) {
+		return DirUp, true
+	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyArrowLeft) {
+		return DirLeft, true
+	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyArrowRight) {
+		return DirRight, true
+	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyArrowDown) {
+		return DirDown, true
+	}
+	if i.mouseState == mouseStateSettled {
+		return i.mouseDir, true
+	}
+	if i.touchState == touchStateSettled {
+		return i.touchDir, true
+	}
+	return 0, false
+}
+
 func (g *Game) isKeyJustPressed() bool {
 	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 		return true

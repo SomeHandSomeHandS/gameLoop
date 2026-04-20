@@ -13,13 +13,16 @@ import (
 
 type Mode int
 
+// Game represents the game state and logic.
 type Game struct {
+	board         *Board
 	Layers        [][]int
 	mode          Mode
 	touchIDs      []ebiten.TouchID
 	gamepadIDs    []ebiten.GamepadID
 	keys          []ebiten.Key
 	gameOverCount int
+	input         *Input
 }
 
 var (
@@ -29,6 +32,7 @@ var (
 const (
 	screenWidth  = 240
 	screenHeight = 240
+	boardSize    = 4
 )
 
 const (
@@ -45,6 +49,19 @@ func init() {
 		log.Fatal(err)
 	}
 	tilesImage = ebiten.NewImageFromImage(img)
+}
+
+// NewGame generates a new Game object.
+func NewGame() (*Game, error) {
+	g := &Game{
+		input: NewInput(),
+	}
+	var err error
+	g.board, err = NewBoard(boardSize)
+	if err != nil {
+		return nil, err
+	}
+	return g, nil
 }
 
 func (g *Game) Update() error {
