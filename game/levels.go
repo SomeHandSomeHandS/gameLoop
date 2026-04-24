@@ -1,17 +1,17 @@
 package game
 
-import "mongoConnector/models"
-
 type Levels struct {
+	layers [][]int
 }
 
-func (l *Levels) SetLevels() (levelBook *models.LevelBook) {
+func NewLevels() *Levels {
+	return &Levels{}
+}
 
-	var level models.Level
-	levelBook = &models.LevelBook{}
+func (l *Levels) SetLevels() error {
 
 	// get levels from somewhere
-	le := [][]int{
+	l.layers = [][]int{
 		{
 			243, 243, 243, 243, 243, 243, 243, 243, 243, 243, 243, 243, 243, 243, 243,
 			243, 243, 243, 243, 243, 243, 243, 243, 243, 243, 243, 243, 243, 243, 243,
@@ -52,16 +52,5 @@ func (l *Levels) SetLevels() (levelBook *models.LevelBook) {
 		},
 	}
 
-	level.Layers = le
-	level.Name = "COOL TEST"
-
-	//load them into book
-	levelBook.Levels = append(levelBook.Levels, level)
-
-	return
-}
-
-func GetLevel(level models.Level) [][]int {
-
-	return level.Layers
+	return nil
 }

@@ -16,13 +16,13 @@ type Mode int
 // Game represents the game state and logic.
 type Game struct {
 	board         *Board
-	Layers        [][]int
+	input         *Input
+	levels        *Levels
 	mode          Mode
 	touchIDs      []ebiten.TouchID
 	gamepadIDs    []ebiten.GamepadID
 	keys          []ebiten.Key
 	gameOverCount int
-	input         *Input
 }
 
 var (
@@ -54,7 +54,8 @@ func init() {
 // NewGame generates a new Game object.
 func NewGame() (*Game, error) {
 	g := &Game{
-		input: NewInput(),
+		input:  NewInput(),
+		levels: NewLevels(),
 	}
 	var err error
 	g.board, err = NewBoard(boardSize)
@@ -96,7 +97,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	// this rendering is done very efficiently.
 	// For more detail, see https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.DrawImage
 	const xCount = screenWidth / tileSize
-	for _, l := range g.Layers {
+	for _, l := range g.levels.layers {
 		for i, t := range l {
 			op := &ebiten.DrawImageOptions{}
 			op.GeoM.Translate(float64((i%xCount)*tileSize), float64((i/xCount)*tileSize))
