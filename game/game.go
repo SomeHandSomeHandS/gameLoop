@@ -53,11 +53,21 @@ func init() {
 
 // NewGame generates a new Game object.
 func NewGame() (*Game, error) {
-	g := &Game{
-		input:  NewInput(),
-		levels: NewLevels(),
-	}
+	
 	var err error
+	
+	g := &Game{
+		mode: ModeTitle,
+	}
+	
+	g.input, err = NewInput()
+	if err != nil {
+		return nil, err
+	}
+	g.levels, err = NewLevels()
+	if err != nil {
+		return nil, err
+	}
 	g.board, err = NewBoard(boardSize)
 	if err != nil {
 		return nil, err
@@ -70,7 +80,9 @@ func (g *Game) Update() error {
 	case ModeTitle:
 		if g.isKeyJustPressed() {
 			g.mode = ModeGame
+			//update 
 		}
+
 	case ModeGame:
 
 		if g.isKeyJustPressed() {

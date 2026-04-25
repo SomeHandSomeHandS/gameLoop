@@ -38,10 +38,13 @@ func loadConfig(filename string) (config models.Config, err error) {
 
 func main() {
 
-	g := &game.Game{}
+	g, err := game.NewGame()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// load config
-	_, err := loadConfig("config.json")
+	_, err = loadConfig("config.json")
 	if err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}

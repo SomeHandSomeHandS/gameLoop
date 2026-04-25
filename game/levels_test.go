@@ -3,7 +3,10 @@ package game
 import "testing"
 
 func TestLevelsSetLevels(t *testing.T) {
-	l := NewLevels()
+	l, err := NewLevels()
+	if err != nil {
+		t.Fatalf("expected no error from NewLevels, got %v", err)
+	}
 	if err := l.SetLevels(); err != nil {
 		t.Fatalf("expected no error from SetLevels, got %v", err)
 	}

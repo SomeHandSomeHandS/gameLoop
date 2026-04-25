@@ -48,8 +48,8 @@ type Input struct {
 }
 
 // NewInput generates a new Input object.
-func NewInput() *Input {
-	return &Input{}
+func NewInput() (*Input, error) {
+	return &Input{}, nil
 }
 
 // Dir returns a currently pressed direction.

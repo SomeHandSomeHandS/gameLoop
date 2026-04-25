@@ -4,8 +4,8 @@ type Levels struct {
 	layers [][]int
 }
 
-func NewLevels() *Levels {
-	return &Levels{}
+func NewLevels() (*Levels, error) {
+	return &Levels{}, nil
 }
 
 func (l *Levels) SetLevels() error {
