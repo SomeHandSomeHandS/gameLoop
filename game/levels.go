@@ -1,14 +1,15 @@
 package game
 
-type Levels struct {
+type Level struct {
 	layers [][]int
 }
 
-func NewLevels() (*Levels, error) {
-	return &Levels{}, nil
+func NewLevel() (*Level, error) {
+
+	return &Level{}, nil
 }
 
-func (l *Levels) SetLevels() error {
+func (l *Level) setLevels() error {
 
 	// get levels from somewhere
 	l.layers = [][]int{
