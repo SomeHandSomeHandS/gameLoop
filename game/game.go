@@ -17,7 +17,7 @@ type Mode int
 type Game struct {
 	board         *Board
 	input         *Input
-	level         *Level
+	levels        *Levels
 	mode          Mode
 	touchIDs      []ebiten.TouchID
 	gamepadIDs    []ebiten.GamepadID
@@ -65,11 +65,11 @@ func NewGame() (*Game, error) {
 		return nil, err
 	}
 
-	g.level, err = NewLevel()
+	g.levels, err = InitLevels()
 	if err != nil {
 		return nil, err
 	}
-	err = g.level.setLevels()
+	err = g.levels.getLevels()
 	if err != nil {
 		return nil, err
 	}
@@ -86,13 +86,14 @@ func (g *Game) Update() error {
 	case ModeTitle:
 		if g.isKeyJustPressed() {
 			g.mode = ModeGame
-			//
+			// update layers
+			g.levels.setLevel()
 		}
 
 	case ModeGame:
 
 		if g.isKeyJustPressed() {
-			// update game state
+			// update game state and layers
 
 		}
 		// update game state
@@ -115,7 +116,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	// this rendering is done very efficiently.
 	// For more detail, see https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.DrawImage
 	const xCount = screenWidth / tileSize
-	for _, l := range g.level.layers {
+	// TODO wtf levels array
+	for _, l := range g.levels.layers {
 		for i, t := range l {
 			op := &ebiten.DrawImageOptions{}
 			op.GeoM.Translate(float64((i%xCount)*tileSize), float64((i/xCount)*tileSize))
