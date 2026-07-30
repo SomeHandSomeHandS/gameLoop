@@ -9,20 +9,24 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/examples/resources/images"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 type Mode int
 
 // Game represents the game state and logic.
 type Game struct {
-	board         *Board
-	input         *Input
-	levels        *Levels
+	board   *Board
+	input   *Input
+	levels  *Levels
+	sprites *Sprites
+
 	mode          Mode
-	touchIDs      []ebiten.TouchID
-	gamepadIDs    []ebiten.GamepadID
-	keys          []ebiten.Key
 	gameOverCount int
+
+	touchIDs   []ebiten.TouchID
+	gamepadIDs []ebiten.GamepadID
+	keys       []ebiten.Key
 }
 
 var (
@@ -86,23 +90,23 @@ func (g *Game) Update() error {
 	case ModeTitle:
 		if g.isKeyJustPressed() {
 			g.mode = ModeGame
-			// update layers
-			g.levels.setLevel()
 		}
 
 	case ModeGame:
+		if shouldEndGame(inpututil.IsKeyJustPressed) {
+			g.mode = ModeGameOver
+			return nil
+		}
 
 		if g.isKeyJustPressed() {
 			// update game state and layers
+			g.levels.setLevel()
 
 		}
 		// update game state
 
-		// if game over, switch to game over mode
-		// g.mode = ModeGameOver
-
 	case ModeGameOver:
-
+		return ebiten.Termination
 	}
 	return nil
 }

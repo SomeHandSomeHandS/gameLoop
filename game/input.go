@@ -76,6 +76,10 @@ func (i *Input) Dir() (Dir, bool) {
 	return 0, false
 }
 
+func shouldEndGame(isPressed func(ebiten.Key) bool) bool {
+	return isPressed(ebiten.KeyE)
+}
+
 func (g *Game) isKeyJustPressed() bool {
 	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 		return true
