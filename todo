@@ -1,3 +1,7 @@
 sprite sheet + meta data
+    divide by 13 because this will automatically cut up image that is bound?
 create levels
 sprite movements controls
+
+FLOW:
+    

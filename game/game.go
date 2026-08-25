@@ -30,7 +30,7 @@ type Game struct {
 }
 
 var (
-	tilesImage *ebiten.Image
+	tilesImage, spriteImage *ebiten.Image
 )
 
 const (
@@ -40,8 +40,8 @@ const (
 )
 
 const (
-	tileSize       = 16
-	ModeTitle Mode = iota
+	tileSize        = 16
+	ModeTitle  Mode = iota
 	ModeGame
 	ModeGameOver
 )
@@ -53,6 +53,7 @@ func init() {
 		log.Fatal(err)
 	}
 	tilesImage = ebiten.NewImageFromImage(img)
+
 }
 
 // NewGame generates a new Game object.
@@ -82,6 +83,14 @@ func NewGame() (*Game, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	g.sprites, err = InitSprites()
+	if err != nil {
+		return nil, err
+	}
+
+	spriteImage = g.sprites.spriteImage
+
 	return g, nil
 }
 
